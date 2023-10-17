@@ -87,7 +87,7 @@ namespace DDD.Infra.SQLServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Programador",
+                name: "ProgramadorTI",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [UserSequence]"),
@@ -102,7 +102,7 @@ namespace DDD.Infra.SQLServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Programador", x => x.UserId);
+                    table.PrimaryKey("PK_ProgramadorTI", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,14 +157,15 @@ namespace DDD.Infra.SQLServer.Migrations
                 name: "ProjetosTI",
                 columns: table => new
                 {
+                    ProjetoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GerenteId = table.Column<int>(type: "int", nullable: false),
                     ProgramadorId = table.Column<int>(type: "int", nullable: false),
-                    ProjetoId = table.Column<int>(type: "int", nullable: false),
                     DataEntrega = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjetosTI", x => new { x.GerenteId, x.ProgramadorId });
+                    table.PrimaryKey("PK_ProjetosTI", x => x.ProjetoId);
                     table.ForeignKey(
                         name: "FK_ProjetosTI_GerenteTI_GerenteId",
                         column: x => x.GerenteId,
@@ -172,9 +173,9 @@ namespace DDD.Infra.SQLServer.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjetosTI_Programador_ProgramadorId",
+                        name: "FK_ProjetosTI_ProgramadorTI_ProgramadorId",
                         column: x => x.ProgramadorId,
-                        principalTable: "Programador",
+                        principalTable: "ProgramadorTI",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -193,6 +194,11 @@ namespace DDD.Infra.SQLServer.Migrations
                 name: "IX_Projeto_PesquisadorUserId",
                 table: "Projeto",
                 column: "PesquisadorUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjetosTI_GerenteId",
+                table: "ProjetosTI",
+                column: "GerenteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjetosTI_ProgramadorId",
@@ -225,7 +231,7 @@ namespace DDD.Infra.SQLServer.Migrations
                 name: "GerenteTI");
 
             migrationBuilder.DropTable(
-                name: "Programador");
+                name: "ProgramadorTI");
 
             migrationBuilder.DropSequence(
                 name: "UserSequence");
